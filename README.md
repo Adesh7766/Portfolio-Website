@@ -1,3 +1,7 @@
+Note: This purpose of this project was to solely learn CursorAI.
+      I started this project from scratch with almost no knowledge on react.
+      As the world is shifting towards AI, I saw an opportunity to learn and levearage the power of CursorAI which helped me create this beautiful portfolio website.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
