@@ -1,4 +1,4 @@
-Note: This purpose of this project was to solely learn CursorAI.
+Note: The purpose of this project was to solely learn CursorAI.
       I started this project from scratch with almost no knowledge on react.
       As the world is shifting towards AI, I saw an opportunity to learn and levearage the power of CursorAI which helped me create this beautiful portfolio website.
 
