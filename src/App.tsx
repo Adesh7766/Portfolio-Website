@@ -1,86 +1,94 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import Home from './components/Home';
+import Hero from './components/Hero';
+import Marquee from './components/Marquee';
 import About from './components/About';
+import Skills from './components/Skills';
+import Experience from './components/Experience';
+import Education from './components/Education';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import Footer from './components/Footer';
+import { SparkIcon } from './components/Icons';
 
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#2196f3', // Bright blue
-      light: '#64b5f6',
-      dark: '#1976d2',
-    },
-    secondary: {
-      main: '#90caf9', // Light blue
-    },
-    background: {
-      default: '#000000',
-      paper: '#0a1929', // Dark blue-black
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#90caf9',
-    },
-  },
-  typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      background: 'linear-gradient(45deg, #2196f3 30%, #90caf9 90%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-    },
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          scrollBehavior: 'smooth',
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
-          backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        },
-      },
-    },
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'rgba(10, 25, 41, 0.8)',
-          backdropFilter: 'blur(8px)',
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'rgba(10, 25, 41, 0.8)',
-          backdropFilter: 'blur(8px)',
-        },
-      },
-    },
-  },
-});
+const ScrollProgress: React.FC = () => {
+  const [progress, setProgress] = useState(0);
 
-function App() {
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      setProgress(max > 0 ? doc.scrollTop / max : 0);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <div
+      className="scroll-progress"
+      style={{ transform: `scaleX(${progress})` }}
+      aria-hidden="true"
+    />
   );
-}
+};
+
+const App: React.FC = () => {
+  return (
+    <div className="app">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <div className="grain" aria-hidden="true" />
+      <ScrollProgress />
+      <Navbar />
+
+      <main id="main">
+        <Hero />
+
+        <Marquee
+          className="marquee--red"
+          items={[
+            'Open to collaborate',
+            '.NET & full-stack',
+            'Kathmandu, Nepal',
+            'APIs that behave',
+            'Say hello',
+          ]}
+          separator={<SparkIcon />}
+          speed={32}
+        />
+
+        <About />
+        <Skills />
+        <Experience />
+        <Education />
+        <Projects />
+
+        <Marquee
+          className="marquee--yellow"
+          items={[
+            'Let’s build something',
+            'Backend heavy',
+            'Full-stack curious',
+            'Always shipping',
+          ]}
+          separator={<SparkIcon />}
+          speed={38}
+          reverse
+        />
+
+        <Contact />
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
 
 export default App;

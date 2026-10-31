@@ -1,50 +1,62 @@
-Note: The purpose of this project was to solely learn CursorAI.
-      I started this project from scratch with almost no knowledge on react.
-      As the world is shifting towards AI, I saw an opportunity to learn and levearage the power of CursorAI which helped me create this beautiful portfolio website.
+# Adesh Pandey — Portfolio
 
-# Getting Started with Create React App
+A retro, animated personal portfolio for **Adesh Pandey**, a software engineer based in Kathmandu, Nepal. Built with React, TypeScript, and Framer Motion. No templates, no page builders.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## What's inside
 
-## Available Scripts
+- Hero with a photo frame, rotating role, and quick links
+- About, skills, experience timeline, education, and credentials
+- Filterable project gallery covering every public project
+- Playground with a playable Tic-Tac-Toe game and links to older mini-projects
+- Contact form (opens the visitor's email client) with GitHub, LinkedIn, Instagram, and email links
+- Scroll progress, marquees, reveal animations, and reduced-motion support
+- SEO metadata, Open Graph image, JSON-LD person schema, and PWA manifest
 
-In the project directory, you can run:
+## Scripts
 
-### `npm start`
+```bash
+npm start      # development server at http://localhost:3000
+npm test       # run tests
+npm run build  # production build in /build
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Editing content
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+All personal content lives in **`src/data/portfolio.ts`**:
 
-### `npm test`
+- `profile` — name, role, email, tagline, hero copy, resume/photo paths
+- `socials` — GitHub, LinkedIn, Instagram, email
+- `experience` — roles, dates, highlights, tech tags
+- `education` / `credentials` — schools, training, volunteering
+- `skillGroups` — skill categories and chips
+- `projects` — project cards, categories, links, status
+- `miniProjects` — playground links
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Add your photo
 
-### `npm run build`
+Replace **`public/photo.jpg`** with your portrait. A styled placeholder is included for now. No code changes needed.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Resume
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The downloadable CV lives at **`public/Adesh-Pandey-CV.pdf`**. Replace that file to update the download.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Deploying to Vercel
 
-### `npm run eject`
+1. Push the repository to GitHub.
+2. Import it in [Vercel](https://vercel.com/new).
+3. Keep the detected settings: build command `npm run build`, output directory `build`.
+4. Deploy.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The site is a single page with anchor navigation, so no SPA rewrite rules are required.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+public/                 static assets, CV, OG image, icons
+src/
+  components/           page sections and UI primitives
+  data/portfolio.ts     all content
+  App.tsx               page composition
+  index.css             design system and responsive styles
+  index.tsx             entry point
+```

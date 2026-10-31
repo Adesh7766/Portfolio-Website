@@ -1,166 +1,186 @@
-import React from 'react';
-import {
-  Container,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  CardActions,
-  Button,
-  Box,
-} from '@mui/material';
-import { motion } from 'framer-motion';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LaunchIcon from '@mui/icons-material/Launch';
+import React, { useMemo, useState } from 'react';
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
+import TicTacToe from './TicTacToe';
+import { miniProjects, projectFilters, projects } from '../data/portfolio';
+import type { ProjectCategory } from '../data/portfolio';
+import { ArrowUpRightIcon, CodeIcon } from './Icons';
 
-interface Project {
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  githubUrl: string;
-  liveUrl: string;
-}
-
-const projects: Project[] = [
-  {
-    title: 'Ecommerce Website',
-    description: 'A ecommerce application built with modern technologies. Features include Web APIs for product management, user authentication, and order processing. Built with .NET 8, utilizing SQL Server for data persistence and following clean architecture principles.',
-    image: 'https://images.unsplash.com/photo-1607082349566-187342175e2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZWNvbW1lcmNlJTIwYXBwfGVufDB8fDB8fHww&w=1000&q=80',
-    technologies: ['.NET 8', 'C#', 'SQL Server', 'Web API', 'Clean Architecture'],
-    githubUrl: 'https://github.com/Adesh7766/Ecommerce-Website.git',
-    liveUrl: 'https://github.com/Adesh7766/Ecommerce-Website'
-  },
-  {
-    title: 'Bug Tracker',
-    description: 'A comprehensive bug tracking system built with ASP.NET MVC architecture. Features include user authentication using HttpSession, bug reporting, tracking, and management. Built with .NET 6, utilizing SQL Server Management Studio (SSMS) and Entity Framework Core.',
-    image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    technologies: ['ASP.NET MVC', '.NET 6', 'Entity Framework Core', 'SSMS', 'jQuery', 'Bootstrap'],
-    githubUrl: 'https://github.com/Adesh7766/Bug-Tracker.git',
-    liveUrl: 'https://github.com/Adesh7766/Bug-Tracker'
-  },
-  {
-    title: 'Secure Login Authentication',
-    description: 'A robust authentication system built with .NET 8. Features include secure password hashing for database storage, JWT token generation for authentication, and a clean layered architecture with separate BAL, DAL, and Service layers.',
-    image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
-    technologies: ['.NET 8', 'C#', 'JWT Authentication', 'Password Hashing', 'SQL Server', 'Clean Architecture'],
-    githubUrl: 'https://github.com/Adesh7766/LoginAuthProject.git',
-    liveUrl: 'https://github.com/Adesh7766/LoginAuthProject'
-  }
-];
+const initials = (title: string) =>
+  title
+    .split(' ')
+    .map((word) => word[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
 
 const Projects: React.FC = () => {
+  const [filter, setFilter] = useState<ProjectCategory | 'All'>('All');
+
+  const visible = useMemo(
+    () =>
+      filter === 'All'
+        ? projects
+        : projects.filter((project) => project.category === filter),
+    [filter]
+  );
+
   return (
-    <Container>
-      <Box sx={{ py: 8 }}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Typography variant="h3" gutterBottom className="gradient-text">
-            My Projects
-          </Typography>
-          
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'repeat(2, 1fr)'
-              },
-              gap: 4
-            }}
-          >
-            {projects.map((project, index) => (
-              <Box key={project.title} sx={{ height: '100%' }}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.2 }}
-                  style={{ height: '100%' }}
-                >
-                  <Card className="glass-effect" sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                    <CardMedia
-                      component="img"
-                      height="300"
-                      image={project.image}
-                      alt={project.title}
-                      sx={{
-                        objectFit: 'cover',
-                        transition: 'transform 0.3s ease-in-out',
-                        '&:hover': {
-                          transform: 'scale(1.05)',
-                        },
-                      }}
-                    />
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography variant="h5" gutterBottom>
-                        {project.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" paragraph>
-                        {project.description}
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                        {project.technologies.map((tech) => (
-                          <Typography
-                            key={tech}
-                            variant="body2"
-                            component="span"
-                            sx={{
-                              px: 1.5,
-                              py: 0.5,
-                              borderRadius: 2,
-                              backgroundColor: 'primary.main',
-                              color: 'white',
-                              fontSize: '0.8rem',
-                              fontWeight: 500,
-                            }}
-                          >
-                            {tech}
-                          </Typography>
-                        ))}
-                      </Box>
-                    </CardContent>
-                    <CardActions sx={{ p: 2, pt: 0 }}>
-                      <Button
-                        size="small"
-                        startIcon={<GitHubIcon />}
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        GitHub
-                      </Button>
-                      <Button
-                        size="small"
-                        startIcon={<LaunchIcon />}
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          '&:hover': {
-                            color: 'primary.main',
-                          },
-                        }}
-                      >
-                        Live Demo
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </motion.div>
-              </Box>
-            ))}
-          </Box>
-        </motion.div>
-      </Box>
-    </Container>
+    <section id="projects" className="section section--projects">
+      <div className="container">
+        <SectionHeading
+          index="05"
+          title="Projects"
+          accent="& experiments"
+          kicker="Things I built to solve a problem — or to understand one."
+        />
+
+        <div className="project-filters" aria-label="Project filters">
+          {projectFilters.map((item) => (
+            <button
+              type="button"
+              key={item}
+              aria-pressed={filter === item}
+              className={`project-filters__btn ${
+                filter === item ? 'is-active' : ''
+              }`}
+              onClick={() => setFilter(item)}
+            >
+              {item}
+              <span className="project-filters__count">
+                {item === 'All'
+                  ? projects.length
+                  : projects.filter((project) => project.category === item).length}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="projects__grid">
+          {visible.map((project, index) => (
+            <Reveal
+              key={project.id}
+              delay={Math.min(index * 0.05, 0.25)}
+              className={`project ${project.featured ? 'project--featured' : ''}`}
+            >
+              <article
+                className="project__card"
+                style={{ '--accent': project.accent } as React.CSSProperties}
+              >
+                <div className="project__cover">
+                  <span className="project__initials" aria-hidden="true">
+                    {initials(project.title)}
+                  </span>
+                  <span className="project__number">
+                    {String(projects.indexOf(project) + 1).padStart(2, '0')}
+                  </span>
+                  <span
+                    className={`badge project__status status--${project.status
+                      .toLowerCase()
+                      .replace(' ', '-')}`}
+                  >
+                    {project.status}
+                  </span>
+                  <span className="project__category">{project.category}</span>
+                </div>
+
+                <div className="project__body">
+                  <h3 className="project__title">{project.title}</h3>
+                  <p className="project__tagline">{project.tagline}</p>
+                  <p className="project__description">{project.description}</p>
+
+                  <div className="project__tags">
+                    {project.tech.map((tech) => (
+                      <span className="chip chip--sm" key={tech}>
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <footer className="project__footer">
+                  <span className="project__year">{project.year}</span>
+                  <div className="project__links">
+                    {project.links.length > 0 ? (
+                      project.links.map((link) => (
+                        <a
+                          key={link.label}
+                          className="text-link"
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {link.label}
+                          <ArrowUpRightIcon />
+                        </a>
+                      ))
+                    ) : (
+                      <span className="project__no-link">
+                        No public repository
+                      </span>
+                    )}
+                  </div>
+                </footer>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+
+        <div id="playground" className="playground">
+          <Reveal>
+            <div className="playground__head">
+              <div>
+                <span className="playground__label">
+                  <CodeIcon /> Playground
+                </span>
+                <h3 className="playground__title">
+                  Small builds, <em className="serif">big curiosity</em>
+                </h3>
+                <p className="playground__intro">
+                  Older mini-projects that taught me the fundamentals. One of them
+                  is playable right here.
+                </p>
+              </div>
+              <span className="sticker sticker--playground" aria-hidden="true">
+                Press
+                <br />
+                start
+              </span>
+            </div>
+          </Reveal>
+
+          <div className="playground__grid">
+            <Reveal className="playground__game">
+              <TicTacToe />
+            </Reveal>
+
+            <div className="playground__list">
+              {miniProjects.map((mini, index) => (
+                <Reveal key={mini.title} delay={index * 0.05}>
+                  <a
+                    className="mini"
+                    href={mini.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="mini__index">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <span className="mini__text">
+                      <span className="mini__title">{mini.title}</span>
+                      <span className="mini__desc">{mini.description}</span>
+                    </span>
+                    <span className="mini__lang">{mini.language}</span>
+                    <ArrowUpRightIcon className="mini__arrow" />
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default Projects; 
+export default Projects;
