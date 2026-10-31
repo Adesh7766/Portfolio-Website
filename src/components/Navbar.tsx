@@ -1,148 +1,132 @@
-import React, { useState } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemText,
-  useTheme,
-  useMediaQuery,
-  Box,
-  Container,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { CloseIcon, MenuIcon } from './Icons';
 
-interface MenuItem {
-  text: string;
-  path: string;
-}
-
-const menuItems: MenuItem[] = [
-  { text: 'Home', path: '/' },
-  { text: 'About', path: '/about' },
-  { text: 'Projects', path: '/projects' },
-  { text: 'Contact', path: '/contact' },
+const links = [
+  { id: 'about', label: 'About' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'education', label: 'Education' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'contact', label: 'Contact' },
 ];
 
 const Navbar: React.FC = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const location = useLocation();
+  const [active, setActive] = useState('home');
+  const [open, setOpen] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  useEffect(() => {
+    const sections = ['home', ...links.map((link) => link.id)]
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
 
-  const drawer = (
-    <List>
-      {menuItems.map((item) => (
-        <ListItemButton
-          key={item.text}
-          component={Link}
-          to={item.path}
-          selected={location.pathname === item.path}
-          onClick={handleDrawerToggle}
-          sx={{
-            '&.Mui-selected': {
-              backgroundColor: 'primary.main',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: 'primary.dark',
-              },
-            },
-          }}
-        >
-          <ListItemText primary={item.text} />
-        </ListItemButton>
-      ))}
-    </List>
-  );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-35% 0px -55% 0px', threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open]);
 
   return (
-    <AppBar position="sticky" elevation={0}>
-      <Container maxWidth="lg">
-        <Toolbar disableGutters>
-          {isMobile && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography
-            variant="h6"
-            component={Link}
-            to="/"
-            sx={{
-              flexGrow: 1,
-              textDecoration: 'none',
-              color: 'inherit',
-              fontWeight: 700,
-            }}
+    <>
+      <header className="nav">
+        <div className="nav__inner">
+          <a className="brand" href="#home" onClick={() => setOpen(false)}>
+            <span className="brand__mark" aria-hidden="true">
+              AP
+            </span>
+            <span className="brand__text">
+              Adesh Pandey
+              <span className="brand__sub">Software Engineer</span>
+            </span>
+          </a>
+
+          <nav className="nav__links" aria-label="Primary">
+            {links.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                className={`nav__link ${active === link.id ? 'is-active' : ''}`}
+                aria-current={active === link.id ? 'location' : undefined}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <a className="btn btn--small nav__cta" href="#contact">
+            Let&apos;s talk
+          </a>
+
+          <button
+            className="nav__toggle"
+            type="button"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            onClick={() => setOpen((value) => !value)}
           >
-            Portfolio
-          </Typography>
-          {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              {menuItems.map((item) => (
-                <Button
-                  key={item.text}
-                  component={Link}
-                  to={item.path}
-                  color="inherit"
-                  sx={{
-                    position: 'relative',
-                    '&::after': {
-                      content: '""',
-                      position: 'absolute',
-                      width: location.pathname === item.path ? '100%' : '0%',
-                      height: '2px',
-                      bottom: 0,
-                      left: 0,
-                      backgroundColor: 'primary.main',
-                      transition: 'width 0.2s ease-in-out',
-                    },
-                    '&:hover::after': {
-                      width: '100%',
-                    },
-                  }}
-                >
-                  {item.text}
-                </Button>
-              ))}
-            </Box>
-          )}
-        </Toolbar>
-      </Container>
-      <Drawer
-        variant="temporary"
-        anchor="left"
-        open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: 240,
-            backgroundColor: 'background.paper',
-          },
-        }}
-      >
-        {drawer}
-      </Drawer>
-    </AppBar>
+            {open ? <CloseIcon /> : <MenuIcon />}
+          </button>
+        </div>
+      </header>
+
+      {open ? (
+        <div className="nav__mobile" id="mobile-menu">
+          <nav aria-label="Mobile">
+            {links.map((link, index) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                className={`nav__mobile-link ${
+                  active === link.id ? 'is-active' : ''
+                }`}
+                aria-current={active === link.id ? 'location' : undefined}
+                onClick={() => setOpen(false)}
+              >
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                {link.label}
+              </a>
+            ))}
+            <a
+              className="nav__mobile-link"
+              href="#contact"
+              onClick={() => setOpen(false)}
+            >
+              <span>07</span>
+              Say hello
+            </a>
+          </nav>
+          <p className="nav__mobile-note">
+            Kathmandu, Nepal &mdash; open to interesting problems.
+          </p>
+        </div>
+      ) : null}
+    </>
   );
 };
 
-export default Navbar; 
+export default Navbar;

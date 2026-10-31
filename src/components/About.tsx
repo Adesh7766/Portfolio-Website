@@ -1,86 +1,83 @@
 import React from 'react';
-import {
-  Container,
-  Typography,
-  Paper,
-  Box,
-} from '@mui/material';
-import { motion } from 'framer-motion';
+import Reveal from './Reveal';
+import SectionHeading from './SectionHeading';
+import { profile, stats } from '../data/portfolio';
+import { MapPinIcon } from './Icons';
 
 const About: React.FC = () => {
   return (
-    <Container>
-      <Box sx={{ py: 8 }}>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Typography variant="h3" gutterBottom className="gradient-text">
-            About Me
-          </Typography>
+    <section id="about" className="section section--about">
+      <div className="container">
+        <SectionHeading
+          index="01"
+          title="About"
+          accent="me"
+          kicker="The short version: I make the invisible parts work."
+        />
 
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                md: 'repeat(3, 1fr)'
-              },
-              gap: 4
-            }}
-          >
-            <Box>
-              <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
-                <Typography variant="h5" gutterBottom>
-                  Who I Am
-                </Typography>
-                <Typography paragraph>
-                  I am a passionate full-stack developer with a strong foundation in modern web technologies.
-                  My journey in software development has equipped me with the skills to build robust and
-                  scalable applications.
-                </Typography>
-              </Paper>
-            </Box>
+        <div className="about__grid">
+          <Reveal className="about__story">
+            <p className="lede">
+              I like the part of the job most people avoid: the{' '}
+              <span className="highlight">backend</span>.
+            </p>
+            <p>
+              APIs, database schemas, deployment pipelines &mdash; the plumbing
+              that makes a product feel effortless. I&apos;m a software engineer
+              based in {profile.location}, currently building and shipping
+              ASP.NET Core services at Riddhsoft.
+            </p>
+            <p>
+              My day is spent designing endpoints, shaping relational data, and
+              connecting it to React and Next.js interfaces. Before that I worked
+              with Blazor, Windows Services, and webhooks at Codebee Nepal, and
+              started out writing ASP.NET MVC modules at Giga Infosoft.
+            </p>
+            <p>
+              Outside of work I build things to learn: a football analytics
+              platform, a task manager, a notes app, a few browser games. I care
+              about clean contracts, honest data, and interfaces that respect the
+              person using them.
+            </p>
 
-            <Box>
-              <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
-                <Typography variant="h5" gutterBottom>
-                  Experience
-                </Typography>
-                <Typography variant="h6" color="primary" gutterBottom>
-                  Junior .NET Developer
-                </Typography>
-                <Typography paragraph color="text.secondary">
-                  4+ Months of Experience
-                </Typography>
-                <Typography paragraph>
-                  Specialized in developing and maintaining web applications using .NET technologies.
-                  Proficient in building RESTful APIs, implementing authentication systems, and working
-                  with SQL Server databases.
-                </Typography>
-              </Paper>
-            </Box>
+            <div className="about__meta">
+              <span>
+                <MapPinIcon /> {profile.location}
+              </span>
+              <span>Nepali / English</span>
+              <span>Open to remote</span>
+            </div>
+          </Reveal>
 
-            <Box>
-              <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
-                <Typography variant="h5" gutterBottom>
-                  Skills
-                </Typography>
-                <Typography paragraph>
-                  • Frontend: JavaScript, jQuery, HTML5, CSS3<br />
-                  • Backend: .NET Framework, .NET Core, C#<br />
-                  • Database: SQL, MS SQL<br />
-                  • Tools: Git, CursorAI, Jira<br />
-                  • Methodologies: Agile, Scrum
-                </Typography>
-              </Paper>
-            </Box>
-          </Box>
-        </motion.div>
-      </Box>
-    </Container>
+          <div className="about__side">
+            <Reveal delay={0.08}>
+              <div className="currently">
+                <div className="currently__top">
+                  <span className="currently__label">Currently</span>
+                  <span className="dot-pulse" aria-hidden="true" />
+                </div>
+                <h3 className="currently__role">Software Engineer</h3>
+                <p className="currently__company">Riddhsoft</p>
+                <p className="currently__meta">Kathmandu, Nepal</p>
+                <span className="badge badge--dark">Jun 2026 &mdash; Present</span>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.16}>
+              <div className="stats">
+                {stats.map((stat) => (
+                  <div className="stat" key={stat.label}>
+                    <span className="stat__value">{stat.value}</span>
+                    <span className="stat__label">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
-export default About; 
+export default About;
